@@ -30,11 +30,37 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  final PageController _pageController = PageController();
+
   final List<Widget> _pages = [
     const HomePage(),
     const SearchPage(),
     const ProfilePage(),
   ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void _onTabTapped(int index) {
+    _pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -67,7 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                setState(() => _currentIndex = 0);
+                // setState(() => _currentIndex = 0);
+                _onTabTapped(0);
               },
             ),
             ListTile(
@@ -75,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Search'),
               onTap: () {
                 Navigator.pop(context);
-                setState(() => _currentIndex = 1);
+                // setState(() => _currentIndex = 1);
+                _onTabTapped(1);
               },
             ),
             ListTile(
@@ -83,7 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
-                setState(() => _currentIndex = 2);
+                // setState(() => _currentIndex = 2);
+                _onTabTapped(2);
               },
             ),
             const Divider(),
@@ -98,16 +128,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: _pages[_currentIndex],
+
+      // body: _pages[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages,
+        physics: const PageScrollPhysics(), // Enables swipe navigation
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        // onTap: (index) => setState(() => _currentIndex = index),
+        onTap: _onTabTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your action here
@@ -118,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Sample Home Page Content
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -192,7 +231,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Placeholder for other pages
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 

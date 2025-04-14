@@ -169,8 +169,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 25.0),
-                      // i agree to the processing
                       Row(
                         children: [
                           Checkbox(
@@ -195,8 +195,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 25.0),
-                      // signup button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -221,8 +221,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: const Text('Sign up'),
                         ),
                       ),
+
                       const SizedBox(height: 30.0),
-                      // sign up divider
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -251,7 +251,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       const SizedBox(height: 30.0),
-                      // sign up social media logo
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -261,8 +261,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Logo(Logos.apple),
                         ],
                       ),
+
                       const SizedBox(height: 25.0),
-                      // already have an account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -289,6 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 20.0),
                     ],
                   ),

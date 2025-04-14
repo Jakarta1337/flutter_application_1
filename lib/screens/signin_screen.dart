@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:login_signup/screens/signup_screen.dart';
+import 'package:login_signup/screens/home_screen.dart';
 import 'package:login_signup/widgets/custom_scaffold.dart';
 
 import '../theme/theme.dart';
@@ -15,6 +16,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+  bool _isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -46,11 +49,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           color: lightColorScheme.primary,
                         ),
                       ),
+
                       const SizedBox(height: 40.0),
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
+                          }
+                          // Email format validation using regex
+                          final emailRegExp = RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          );
+                          if (!emailRegExp.hasMatch(value)) {
+                            return 'Please enter a valid email address';
                           }
                           return null;
                         },
@@ -72,13 +83,30 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 25.0),
                       TextFormField(
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         obscuringCharacter: '*',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Password';
+                          } else if (value.length < 8) {
+                            return 'Password must be at least 8 characters';
+                          }
+                          // Check for uppercase letters
+                          if (!value.contains(RegExp(r'[A-Z]'))) {
+                            return 'Password must contain at least one uppercase letter';
+                          }
+                          // Check for numbers
+                          else if (!value.contains(RegExp(r'[0-9]'))) {
+                            return 'Password must contain at least one number';
+                          }
+                          // Check for special characters
+                          else if (!value.contains(
+                            RegExp(r'[!@#$%^&*(),.?":{}|<>]'),
+                          )) {
+                            return 'Password must contain at least one special character';
                           }
                           return null;
                         },
@@ -87,19 +115,28 @@ class _SignInScreenState extends State<SignInScreen> {
                           hintText: 'Enter Password',
                           hintStyle: const TextStyle(color: Colors.black26),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,18 +169,47 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 25.0),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          // onPressed: () {
+                          //   if (_formSignInKey.currentState!.validate() &&
+                          //       rememberPassword) {
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       const SnackBar(
+                          //         content: Text('Processing Data'),
+                          //       ),
+                          //     );
+                          //   } else if (!rememberPassword) {
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       const SnackBar(
+                          //         content: Text(
+                          //           'Please agree to the processing of personal data',
+                          //         ),
+                          //       ),
+                          //     );
+                          //   }
+                          // },
                           onPressed: () {
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
+                                const SnackBar(content: Text('Signing in...')),
                               );
+
+                              // Simulate navigation to a home screen
+                              Future.delayed(const Duration(seconds: 1), () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            const HomeScreen(),
+                                  ),
+                                );
+                              });
                             } else if (!rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -154,9 +220,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               );
                             }
                           },
-                          child: const Text('Sign up'),
+
+                          child: const Text('Sign in'),
                         ),
                       ),
+
                       const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,7 +241,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               horizontal: 10,
                             ),
                             child: Text(
-                              'Sign up with',
+                              'Sign in with',
                               style: TextStyle(color: Colors.black45),
                             ),
                           ),
@@ -185,6 +253,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -195,8 +264,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           Logo(Logos.apple),
                         ],
                       ),
+
                       const SizedBox(height: 25.0),
-                      // don't have an account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

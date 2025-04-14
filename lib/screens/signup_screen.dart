@@ -14,6 +14,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formSignupKey = GlobalKey<FormState>();
   bool agreePersonalData = true;
+  bool _isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -47,12 +49,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: lightColorScheme.primary,
                         ),
                       ),
+
                       const SizedBox(height: 40.0),
-                      // full name
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Full name';
+                          }
+                          // Check if name contains only alphabetic characters and spaces
+                          final nameRegExp = RegExp(r'^[a-zA-Z ]+$');
+                          if (!nameRegExp.hasMatch(value)) {
+                            return 'Full name should contain only letters';
                           }
                           return null;
                         },
@@ -61,25 +68,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: 'Enter Full Name',
                           hintStyle: const TextStyle(color: Colors.black26),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        textCapitalization: TextCapitalization.words,
                       ),
+
                       const SizedBox(height: 25.0),
-                      // email
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
+                          }
+                          // Email format validation using regex
+                          final emailRegExp = RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          );
+                          if (!emailRegExp.hasMatch(value)) {
+                            return 'Please enter a valid email address';
                           }
                           return null;
                         },
@@ -101,14 +112,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 25.0),
-                      // password
                       TextFormField(
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         obscuringCharacter: '*',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Password';
+                          } else if (value.length < 8) {
+                            return 'Password must be at least 8 characters';
+                          }
+                          // Check for uppercase letters
+                          if (!value.contains(RegExp(r'[A-Z]'))) {
+                            return 'Password must contain at least one uppercase letter';
+                          }
+                          // Check for numbers
+                          else if (!value.contains(RegExp(r'[0-9]'))) {
+                            return 'Password must contain at least one number';
+                          }
+                          // Check for special characters
+                          else if (!value.contains(
+                            RegExp(r'[!@#$%^&*(),.?":{}|<>]'),
+                          )) {
+                            return 'Password must contain at least one special character';
                           }
                           return null;
                         },
@@ -127,6 +154,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: Colors.black12, // Default border color
                             ),
                             borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),

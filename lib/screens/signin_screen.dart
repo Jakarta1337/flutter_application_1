@@ -174,24 +174,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          // onPressed: () {
-                          //   if (_formSignInKey.currentState!.validate() &&
-                          //       rememberPassword) {
-                          //     ScaffoldMessenger.of(context).showSnackBar(
-                          //       const SnackBar(
-                          //         content: Text('Processing Data'),
-                          //       ),
-                          //     );
-                          //   } else if (!rememberPassword) {
-                          //     ScaffoldMessenger.of(context).showSnackBar(
-                          //       const SnackBar(
-                          //         content: Text(
-                          //           'Please agree to the processing of personal data',
-                          //         ),
-                          //       ),
-                          //     );
-                          //   }
-                          // },
                           onPressed: () {
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {

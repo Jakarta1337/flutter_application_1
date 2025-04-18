@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_signup/screens/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onTabTapped(int index) {
     _pageController.animateToPage(
       index,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
 
@@ -173,6 +174,7 @@ class HomePage extends StatelessWidget {
               'Welcome!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 16),
             Card(
               elevation: 4,
@@ -202,11 +204,13 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
             const Text(
               'Recent Items',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 10),
             ListView.builder(
               shrinkWrap: true,
@@ -237,14 +241,5 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text('Search Page'));
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Profile Page'));
   }
 }

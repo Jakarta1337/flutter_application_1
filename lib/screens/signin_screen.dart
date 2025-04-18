@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:login_signup/screens/signup_screen.dart';
 import 'package:login_signup/screens/home_screen.dart';
+import 'package:login_signup/screens/forgot_password_screen.dart';
 import 'package:login_signup/widgets/custom_scaffold.dart';
 
 import '../theme/theme.dart';
@@ -159,6 +160,14 @@ class _SignInScreenState extends State<SignInScreen> {
                             ],
                           ),
                           GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (e) => const ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
                             child: Text(
                               'Forget password?',
                               style: TextStyle(
@@ -186,9 +195,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            const HomeScreen(),
+                                    builder: (context) => const HomeScreen(),
                                   ),
                                 );
                               });

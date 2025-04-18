@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_signup/screens/profile_screen.dart';
+import 'package:login_signup/screens/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -95,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                // setState(() => _currentIndex = 0);
                 _onTabTapped(0);
               },
             ),
@@ -104,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Search'),
               onTap: () {
                 Navigator.pop(context);
-                // setState(() => _currentIndex = 1);
                 _onTabTapped(1);
               },
             ),
@@ -113,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
-                // setState(() => _currentIndex = 2);
                 _onTabTapped(2);
               },
             ),
@@ -123,24 +121,21 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
-                // Navigate to settings
               },
             ),
           ],
         ),
       ),
 
-      // body: _pages[_currentIndex],
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
         children: _pages,
-        physics: const PageScrollPhysics(), // Enables swipe navigation
+        physics: const PageScrollPhysics(),
       ),
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        // onTap: (index) => setState(() => _currentIndex = index),
         onTap: _onTabTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -149,12 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your action here
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Add your action here
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
@@ -232,14 +227,5 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Search Page'));
   }
 }

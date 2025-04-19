@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_signup/screens/signup_screen.dart';
-import 'package:login_signup/screens/home_screen.dart';
+import 'package:login_signup/screens/auth/signin_screen.dart';
+import 'package:login_signup/theme/theme.dart';
 import 'package:login_signup/widgets/custom_scaffold.dart';
 
-import '../theme/theme.dart';
-
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  final _formSignInKey = GlobalKey<FormState>();
-  bool rememberPassword = true;
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _formSignupKey = GlobalKey<FormState>();
+  bool agreePersonalData = true;
   bool _isPasswordVisible = false;
 
   @override
@@ -36,13 +34,15 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               child: SingleChildScrollView(
+                // get started form
                 child: Form(
-                  key: _formSignInKey,
+                  key: _formSignupKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // get started text
                       Text(
-                        'Welcome back',
+                        'Get Started',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
@@ -51,6 +51,35 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
 
                       const SizedBox(height: 40.0),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Full name';
+                          }
+                          // Check if name contains only alphabetic characters and spaces
+                          final nameRegExp = RegExp(r'^[a-zA-Z ]+$');
+                          if (!nameRegExp.hasMatch(value)) {
+                            return 'Full name should contain only letters';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          label: const Text('Full Name'),
+                          hintText: 'Enter Full Name',
+                          hintStyle: const TextStyle(color: Colors.black26),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        textCapitalization: TextCapitalization.words,
+                      ),
+
+                      const SizedBox(height: 25.0),
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -115,11 +144,15 @@ class _SignInScreenState extends State<SignInScreen> {
                           hintText: 'Enter Password',
                           hintStyle: const TextStyle(color: Colors.black26),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
+                            borderSide: const BorderSide(
+                              color: Colors.black12, // Default border color
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black12),
+                            borderSide: const BorderSide(
+                              color: Colors.black12, // Default border color
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           suffixIcon: IconButton(
@@ -139,32 +172,25 @@ class _SignInScreenState extends State<SignInScreen> {
 
                       const SizedBox(height: 25.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
-                                activeColor: lightColorScheme.primary,
-                              ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(color: Colors.black45),
-                              ),
-                            ],
+                          Checkbox(
+                            value: agreePersonalData,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                agreePersonalData = value!;
+                              });
+                            },
+                            activeColor: lightColorScheme.primary,
                           ),
-                          GestureDetector(
-                            child: Text(
-                              'Forget password?',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
+                          const Text(
+                            'I agree to the processing of ',
+                            style: TextStyle(color: Colors.black45),
+                          ),
+                          Text(
+                            'Personal data',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: lightColorScheme.primary,
                             ),
                           ),
                         ],
@@ -175,24 +201,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
+                            if (_formSignupKey.currentState!.validate() &&
+                                agreePersonalData) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Signing in...')),
+                                const SnackBar(
+                                  content: Text('Processing Data'),
+                                ),
                               );
-
-                              // Simulate navigation to a home screen
-                              Future.delayed(const Duration(seconds: 1), () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            const HomeScreen(),
-                                  ),
-                                );
-                              });
-                            } else if (!rememberPassword) {
+                            } else if (!agreePersonalData) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -202,12 +218,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               );
                             }
                           },
-
-                          child: const Text('Sign in'),
+                          child: const Text('Sign up'),
                         ),
                       ),
 
-                      const SizedBox(height: 25.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -223,7 +238,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               horizontal: 10,
                             ),
                             child: Text(
-                              'Sign in with',
+                              'Sign up with',
                               style: TextStyle(color: Colors.black45),
                             ),
                           ),
@@ -235,8 +250,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 30.0),
 
-                      const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -252,7 +267,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Don\'t have an account? ',
+                            'Already have an account? ',
                             style: TextStyle(color: Colors.black45),
                           ),
                           GestureDetector(
@@ -260,12 +275,12 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (e) => const SignUpScreen(),
+                                  builder: (e) => const SignInScreen(),
                                 ),
                               );
                             },
                             child: Text(
-                              'Sign up',
+                              'Sign in',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
@@ -274,6 +289,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 20.0),
                     ],
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/signin_screen.dart';
+import 'package:login_signup/screens/auth/signin_screen.dart';
+import 'package:login_signup/screens/profile/editProfile_screen.dart';
+import 'package:login_signup/screens/profile/settings_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,14 +13,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // Sample user data
   final Map<String, dynamic> _userData = {
-    'name': 'John Doe',
-    'email': 'john.doe@example.com',
+    'name': 'Zakaria',
+    'email': 'zakaria@admin.com',
     'bio':
-        'Flutter developer passionate about creating beautiful and functional applications.',
-    'location': 'New York, USA',
-    'joined': 'January 2023',
-    'following': 235,
-    'followers': 186,
+        'Front-end & Flutter developer passionate about creating beautiful and functional applications.',
+    'placeOfWork': 'Next Octet',
+    'joined': 'March 2025',
+    'hoursWorked': 100,
   };
 
   @override
@@ -54,8 +55,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: const CircleAvatar(
                       radius: 60,
-                      backgroundImage: NetworkImage(
-                        'https://i.pravatar.cc/300',
+                      backgroundImage: AssetImage(
+                        'assets/images/profilePicture.jpg',
                       ),
                     ),
                   ),
@@ -98,18 +99,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildStatColumn(
-                          'Following',
-                          _userData['following'].toString(),
+                          'Hours worked',
+                          _userData['hoursWorked'].toString(),
                         ),
-                        Container(
-                          height: 30,
-                          width: 1,
-                          color: Colors.grey[300],
-                        ),
-                        _buildStatColumn(
-                          'Followers',
-                          _userData['followers'].toString(),
-                        ),
+                        // Container(
+                        //   height: 30,
+                        //   width: 1,
+                        //   color: Colors.grey[300],
+                        // ),
+                        // _buildStatColumn(
+                        //   'Followers',
+                        //   _userData['followers'].toString(),
+                        // ),
                       ],
                     ),
                   ),
@@ -121,11 +122,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to edit profile screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Edit Profile tapped'),
-                            duration: Duration(seconds: 1),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen(),
                           ),
                         );
                       },
@@ -192,8 +192,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   _buildInfoRow(
                     Icons.location_on,
-                    'Location',
-                    _userData['location'],
+                    'place of work',
+                    _userData['placeOfWork'],
                   ),
                   const Divider(),
                   _buildInfoRow(
@@ -202,7 +202,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     _userData['joined'],
                   ),
                   const Divider(),
-                  _buildInfoRow(Icons.work, 'Occupation', 'Flutter Developer'),
+                  _buildInfoRow(
+                    Icons.work,
+                    'Occupation',
+                    'Front-end & Flutter Developer',
+                  ),
                 ],
               ),
             ),
@@ -217,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: Colors.blue),
           const SizedBox(width: 10),
@@ -225,7 +230,50 @@ class _ProfilePageState extends State<ProfilePage> {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: 10),
-          Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow2(IconData icon, String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: Colors.blue),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$title:',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ), // Added space between title and value
+                Text(
+                  value,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -308,6 +356,21 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               children: [
                 ListTile(
+                  leading: const Icon(Icons.settings, color: Colors.blue),
+                  title: const Text('Settings'),
+                  // onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    );
+                  },
+                ),
+
+                const Divider(height: 0),
+                ListTile(
                   leading: const Icon(Icons.info, color: Colors.blue),
                   title: const Text('About App'),
                   onTap: () {
@@ -384,8 +447,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-
-                  // TODO: Add FirebaseAuth.instance.signOut(); if using Firebase
 
                   // Navigate to LoginScreen and remove all previous routes
                   Navigator.of(context).pushAndRemoveUntil(

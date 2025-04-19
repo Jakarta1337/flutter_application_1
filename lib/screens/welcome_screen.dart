@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/signin_screen.dart';
-import 'package:login_signup/screens/signup_screen.dart';
+import 'package:login_signup/screens/auth/signin_screen.dart';
+import 'package:login_signup/screens/auth/signup_screen.dart';
 import 'package:login_signup/theme/theme.dart';
 import 'package:login_signup/widgets/custom_scaffold.dart';
 import 'package:login_signup/widgets/welcome_button.dart';

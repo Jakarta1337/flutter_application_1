@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/profile_screen.dart';
-import 'package:login_signup/screens/search_screen.dart';
+import 'package:login_signup/screens/profile/profile_screen.dart';
+import 'package:login_signup/screens/search/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Flutter App'),
-        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),

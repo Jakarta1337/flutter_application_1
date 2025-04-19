@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_signup/screens/signup_screen.dart';
-import 'package:login_signup/screens/home_screen.dart';
-import 'package:login_signup/screens/forgot_password_screen.dart';
+import 'package:login_signup/screens/auth/signup_screen.dart';
+import 'package:login_signup/screens/home/home_screen.dart';
+import 'package:login_signup/screens/auth/forgot_password_screen.dart';
 import 'package:login_signup/widgets/custom_scaffold.dart';
 
-import '../theme/theme.dart';
+import '../../theme/theme.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,6 +18,21 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
   bool _isPasswordVisible = false;
+
+  // Add text editing controllers
+  final TextEditingController _emailController = TextEditingController(
+    text: 'test@email.com',
+  );
+  final TextEditingController _passwordController = TextEditingController(
+    text: 'Test@1234',
+  );
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                       const SizedBox(height: 40.0),
                       TextFormField(
+                        controller: _emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -87,6 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                       const SizedBox(height: 25.0),
                       TextFormField(
+                        controller: _passwordController,
                         obscureText: !_isPasswordVisible,
                         obscuringCharacter: '*',
                         validator: (value) {

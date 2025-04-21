@@ -18,6 +18,7 @@ dependencies:
   icons_plus: ^4.0.0
   dotted_border: ^2.0.0
   shared_preferences: ^2.2.0
+  firebase_core: ^3.13.0
 
 dev_dependencies:
   flutter_test:

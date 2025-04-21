@@ -15,16 +15,23 @@ class _ProfilePageState extends State<ProfilePage> {
   // Add a File variable to store the profile image
   File? _profileImage;
 
-  // Sample user data
-  final Map<String, dynamic> _userData = {
-    'name': 'Zakaria',
+  // Sample user data - now structured with the fields we need
+  Map<String, dynamic> _userData = {
+    'firstName': 'Zakaria',
+    'lastName': 'El idrissi',
     'email': 'zakaria@admin.com',
+    'phone': '+212 641498334',
+    'job': 'Front-end & Flutter Developer',
+    'cin': 'AB123456',
     'bio':
         'Front-end & Flutter developer passionate about creating beautiful and functional applications.',
     'placeOfWork': 'Next Octet',
     'joined': 'March 2025',
     'hoursWorked': 100,
   };
+
+  // Helper getter to display full name
+  String get _fullName => "${_userData['firstName']} ${_userData['lastName']}";
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      _userData['name'],
+                      _fullName,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -117,26 +124,33 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 20),
 
-                  // Edit profile button - Updated to pass and receive image
+                  // Edit profile button - Updated to pass and receive both image and user data
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Navigate to EditProfileScreen and pass the current image
+                        // Navigate to EditProfileScreen and pass the current image and user data
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => EditProfileScreen(
                                   initialImage: _profileImage,
+                                  userData: _userData,
                                 ),
                           ),
                         );
 
-                        // Handle the returned image
-                        if (result != null && result is File) {
+                        // Handle the returned data (both image and updated user data)
+                        if (result != null && result is Map<String, dynamic>) {
                           setState(() {
-                            _profileImage = result;
+                            if (result['image'] != null) {
+                              _profileImage = result['image'] as File;
+                            }
+                            if (result['userData'] != null) {
+                              _userData =
+                                  result['userData'] as Map<String, dynamic>;
+                            }
                           });
                         }
                       },
@@ -177,7 +191,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildInfoSection() {
-    // Existing implementation
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -208,11 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     _userData['joined'],
                   ),
                   const Divider(),
-                  _buildInfoRow(
-                    Icons.work,
-                    'Occupation',
-                    'Front-end & Flutter Developer',
-                  ),
+                  _buildInfoRow(Icons.work, 'Occupation', _userData['job']),
                 ],
               ),
             ),
@@ -335,7 +344,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-                // ... rest of your existing code
                 const Divider(height: 0),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.red),
@@ -353,7 +361,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showLogoutDialog() {
-    // Existing implementation
     showDialog(
       context: context,
       builder:

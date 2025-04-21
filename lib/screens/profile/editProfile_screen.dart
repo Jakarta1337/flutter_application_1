@@ -2,13 +2,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
 
-// First, let's modify the EditProfileScreen to pass back the selected image
-
+// Updated EditProfileScreen with comprehensive field validation
 class EditProfileScreen extends StatefulWidget {
   final File? initialImage;
+  final Map<String, dynamic> userData;
 
-  const EditProfileScreen({super.key, this.initialImage});
+  const EditProfileScreen({
+    super.key,
+    this.initialImage,
+    required this.userData,
+  });
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -18,10 +23,90 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
+  // Form key for validation
+  final _formKey = GlobalKey<FormState>();
+
+  // Text editing controllers to manage field values
+  late TextEditingController _lastNameController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
+
+  // Map to hold updated user data
+  late Map<String, dynamic> _updatedUserData;
+
   @override
   void initState() {
     super.initState();
     _imageFile = widget.initialImage;
+
+    // Initialize the updated user data with the original data
+    _updatedUserData = Map.from(widget.userData);
+
+    // Initialize controllers with values from user data
+    _lastNameController = TextEditingController(
+      text: widget.userData['lastName'] ?? '',
+    );
+    _firstNameController = TextEditingController(
+      text: widget.userData['firstName'] ?? '',
+    );
+    _phoneController = TextEditingController(
+      text: widget.userData['phone'] ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.userData['email'] ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers when the widget is disposed
+    _lastNameController.dispose();
+    _firstNameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  // Function to validate a name (first or last)
+  bool isValidName(String name) {
+    if (name.isEmpty) {
+      return false;
+    }
+
+    if (name.length < 2 || name.length > 25) {
+      return false;
+    }
+
+    // Allow letters, spaces, hyphens, and apostrophes
+    final RegExp nameRegex = RegExp(r"^[a-zA-Z\s\-']+$");
+    return nameRegex.hasMatch(name);
+  }
+
+  // Function to validate a phone number
+  bool isValidPhone(String phone) {
+    if (phone.isEmpty) {
+      return false;
+    }
+
+    // Validate format: optional single '+' at start, followed by 8-15 digits
+    final RegExp phoneRegex = RegExp(r'^\+?[0-9]{8,15}$');
+
+    return phoneRegex.hasMatch(phone);
+  }
+
+  // Function to validate an email address
+  bool isValidEmail(String email) {
+    if (email.isEmpty) {
+      return false;
+    }
+
+    // Simple email regex that validates common email formats
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+
+    return emailRegex.hasMatch(email);
   }
 
   // Function to handle image selection
@@ -82,109 +167,264 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: _selectImage,
-              child:
-                  _imageFile == null
-                      ? // Show dotted border with camera icon when no image is selected
-                      DottedBorder(
-                        borderType: BorderType.Circle,
-                        dashPattern: [6, 3],
-                        color: Colors.grey,
-                        strokeWidth: 2,
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[200],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: _selectImage,
+                child:
+                    _imageFile == null
+                        ? // Show dotted border with camera icon when no image is selected
+                        DottedBorder(
+                          borderType: BorderType.Circle,
+                          dashPattern: [6, 3],
+                          color: Colors.grey,
+                          strokeWidth: 2,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey[200],
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_a_photo,
+                                  size: 30,
+                                  color: Colors.blueAccent,
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add_a_photo,
-                                size: 30,
-                                color: Colors.blueAccent,
+                        )
+                        : // Show selected image
+                        Stack(
+                          children: [
+                            ClipOval(
+                              child: Image.file(
+                                _imageFile!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
                               ),
-                            ],
-                          ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _imageFile = null;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.7),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                      : // Show selected image
-                      Stack(
-                        children: [
-                          ClipOval(
-                            child: Image.file(
-                              _imageFile!,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _imageFile = null;
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.7),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
-            const SizedBox(height: 25),
-            // Editable Fields
-            _buildEditableField('Last Name', 'Zakaria'),
-            _buildEditableField('First Name', 'El idrissi'),
-            _buildReadOnlyField('Job', 'Front-end & Flutter Developer'),
-            _buildEditableField('Phone', '+212 641498334'),
-            _buildEditableField('Email', 'zakaria@admin.com'),
-            _buildReadOnlyField('CIN', 'AB123456'),
-            const SizedBox(height: 30),
-            // Save Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Return the selected image back to the profile page
-                  Navigator.pop(context, _imageFile);
-                },
-                child: const Text('Save Changes'),
               ),
-            ),
-          ],
+              const SizedBox(height: 25),
+
+              // Editable Fields with comprehensive validation
+              _buildEditableFieldV2(
+                'Last Name',
+                _lastNameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Last name is required';
+                  }
+                  if (!isValidName(value)) {
+                    return 'Please enter a valid last name';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  _updatedUserData['lastName'] = value;
+                },
+                keyboardType: TextInputType.name,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s\-']")),
+                  LengthLimitingTextInputFormatter(25),
+                ],
+              ),
+
+              _buildEditableFieldV2(
+                'First Name',
+                _firstNameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'First name is required';
+                  }
+                  if (!isValidName(value)) {
+                    return 'Please enter a valid first name';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  _updatedUserData['firstName'] = value;
+                },
+                keyboardType: TextInputType.name,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s\-']")),
+                  LengthLimitingTextInputFormatter(25),
+                ],
+              ),
+
+              _buildReadOnlyField(
+                'Job',
+                widget.userData['job'] ?? 'Front-end & Flutter Developer',
+              ),
+
+              _buildEditableFieldV2(
+                'Phone',
+                _phoneController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Phone number is required';
+                  }
+                  if (!isValidPhone(value)) {
+                    return 'Please enter a valid phone number';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  _updatedUserData['phone'] = value;
+                },
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(16),
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    final text = newValue.text;
+
+                    if (text.isEmpty) {
+                      return newValue;
+                    }
+
+                    if (text.contains('+') && text.indexOf('+') > 0) {
+                      return oldValue;
+                    }
+
+                    if (text.split('+').length > 2) {
+                      return oldValue;
+                    }
+
+                    if (!RegExp(r'^\+?[0-9]*$').hasMatch(text)) {
+                      return oldValue;
+                    }
+
+                    return newValue;
+                  }),
+                ],
+              ),
+
+              _buildEditableFieldV2(
+                'Email',
+                _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email is required';
+                  }
+                  if (!isValidEmail(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  _updatedUserData['email'] = value;
+                },
+                keyboardType: TextInputType.emailAddress,
+                inputFormatters: [LengthLimitingTextInputFormatter(25)],
+              ),
+
+              _buildReadOnlyField('CIN', widget.userData['cin'] ?? 'AB123456'),
+              const SizedBox(height: 30),
+
+              // Save Button with validation
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Validate the form first
+                    if (_formKey.currentState!.validate()) {
+                      // Create result map with both image and updated data
+                      final result = {
+                        'image': _imageFile,
+                        'userData': _updatedUserData,
+                      };
+                      // Return both the selected image and updated user data
+                      Navigator.pop(context, result);
+                    }
+                  },
+                  child: const Text('Save Changes'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildEditableField(String label, String initialValue) {
+  Widget _buildEditableField(
+    String label,
+    TextEditingController controller, {
+    required Function(String) onChanged,
+    required String? Function(String?) validator,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
-        initialValue: initialValue,
+        controller: controller,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
+          ),
         ),
+        validator: validator,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildEditableFieldV2(
+    String label,
+    TextEditingController controller, {
+    required Function(String) onChanged,
+    required String? Function(String?) validator,
+    List<TextInputFormatter>? inputFormatters,
+    TextInputType? keyboardType,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
+          ),
+        ),
+        validator: validator,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
       ),
     );
   }

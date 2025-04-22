@@ -379,29 +379,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildEditableField(
-    String label,
-    TextEditingController controller, {
-    required Function(String) onChanged,
-    required String? Function(String?) validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
-          ),
-        ),
-        validator: validator,
-        onChanged: onChanged,
-      ),
-    );
-  }
-
   Widget _buildEditableFieldV2(
     String label,
     TextEditingController controller, {

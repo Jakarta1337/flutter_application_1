@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
     'firstName': 'Zakaria',
     'lastName': 'El idrissi',
     'email': 'zakaria@admin.com',
-    'phone': '+212 641498334',
+    'phone': '+212641498334',
     'job': 'Front-end & Flutter Developer',
     'cin': 'AB123456',
     'bio':

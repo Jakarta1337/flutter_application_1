@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:login_signup/screens/profile/pinCode_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -95,9 +96,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Security Section
           _buildSectionHeader('Security'),
           _buildSettingTile(
-            icon: Icons.lock,
+            icon: Icons.key,
             title: 'PIN Code',
-            subtitle: 'Not set',
+            subtitle: 'No changes',
             onTap: () => _navigateToPinSetup(context),
           ),
 
@@ -250,11 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder:
-            (context) => Scaffold(
-              appBar: AppBar(title: const Text('Setup PIN Code')),
-              body: const Center(child: Text('PIN Setup Screen')),
-            ),
+        builder: (context) => const PinCodeVerificationScreen(),
       ),
     );
   }

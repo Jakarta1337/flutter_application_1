@@ -6,7 +6,9 @@ import 'package:login_signup/widgets/custom_scaffold.dart';
 import 'package:login_signup/widgets/welcome_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  final Function(String) onThemeChanged;
+
+  const WelcomeScreen({super.key, required this.onThemeChanged});
 
   @override
   Widget build(BuildContext context) {

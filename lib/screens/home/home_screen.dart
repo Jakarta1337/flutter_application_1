@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login_signup/screens/profile/profile_screen.dart';
 import 'package:login_signup/screens/search/search_screen.dart';
+import 'package:login_signup/screens/profile/settings_screen.dart';
+import 'package:login_signup/screens/auth/signin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -64,6 +66,36 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Log Out'),
+            content: const Text('Are you sure you want to log out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const SignInScreen(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Log Out'),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,45 +115,88 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('assets/picture.jpg'),
+                  ),
+                  // SizedBox(height: 5),
+                  Text(
+                    'Zakaria',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  // SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.location_on, color: Colors.white),
+                      Text('Temara', style: TextStyle(color: Colors.white70)),
+                    ],
+                  ),
+                ],
               ),
             ),
+
             ListTile(
-              leading: const Icon(Icons.home),
+              leading: const Icon(Icons.home, color: Colors.blue),
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
                 _onTabTapped(0);
               },
             ),
+
             ListTile(
-              leading: const Icon(Icons.search),
+              leading: const Icon(Icons.search, color: Colors.blue),
               title: const Text('Search'),
               onTap: () {
                 Navigator.pop(context);
                 _onTabTapped(1);
               },
             ),
+
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: const Icon(Icons.person, color: Colors.blue),
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
                 _onTabTapped(2);
               },
             ),
+
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.settings, color: Colors.blue),
               title: const Text('Settings'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
               },
             ),
+
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text('Log Out', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                _showLogoutDialog();
+              },
+            ),
+
+            const Spacer(),
+            ListTile(title: const Text("Privacy policy, Terms of use")),
+            ListTile(title: const Text("c 2025 App | v2.0.0")),
           ],
         ),
       ),

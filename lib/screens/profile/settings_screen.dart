@@ -3,14 +3,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:login_signup/screens/profile/pinCode_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final Function(String)? onThemeChanged;
+
+  const SettingsScreen({super.key, this.onThemeChanged});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String _currentTheme = 'system';
+  String _currentTheme = 'light';
   String _currentLanguage = 'en';
 
   @override
@@ -33,6 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _currentTheme = theme;
     });
+    widget.onThemeChanged?.call(theme); // Notify root to update theme
   }
 
   Future<void> _saveLanguage(String language) async {

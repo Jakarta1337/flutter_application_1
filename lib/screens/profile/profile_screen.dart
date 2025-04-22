@@ -382,7 +382,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     (Route<dynamic> route) => false,
                   );
                 },
-                child: const Text('Log Out'),
+                child: const Text(
+                  'Log Out',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ],
           ),

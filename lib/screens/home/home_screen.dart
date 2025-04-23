@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:login_signup/screens/profile/profile_screen.dart';
 import 'package:login_signup/screens/search/search_screen.dart';
 import 'package:login_signup/screens/profile/settings_screen.dart';
 import 'package:login_signup/screens/auth/signin_screen.dart';
+import 'package:login_signup/screens/test_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomePage(),
     const SearchPage(),
     const ProfilePage(),
+    const TestPage(),
   ];
 
   @override
@@ -122,7 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: AssetImage('assets/picture.jpg'),
+                    child: ClipOval(
+                      child: SvgPicture.asset(
+                        'assets/images/default-avatar.svg',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   // SizedBox(height: 5),
                   Text(
@@ -204,8 +214,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
-        children: _pages,
         physics: const PageScrollPhysics(),
+        children: _pages,
       ),
 
       bottomNavigationBar: BottomNavigationBar(
@@ -215,6 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          // BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Test'),
         ],
       ),
 

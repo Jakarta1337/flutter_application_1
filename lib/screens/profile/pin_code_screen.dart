@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:login_signup/screens/profile/newPinCode_screen.dart';
+import 'package:login_signup/screens/profile/new_pin_code_screen.dart';
 
 class PinCodeVerificationScreen extends StatefulWidget {
-  const PinCodeVerificationScreen({Key? key}) : super(key: key);
+  const PinCodeVerificationScreen({super.key});
 
   @override
-  _PinCodeVerificationScreenState createState() =>
+  State<PinCodeVerificationScreen> createState() =>
       _PinCodeVerificationScreenState();
 }
 
@@ -32,6 +32,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
 
       await Future.delayed(const Duration(seconds: 1));
 
+      if (!mounted) return;
       final newPin = await Navigator.push<String>(
         context,
         MaterialPageRoute(
@@ -39,6 +40,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
         ),
       );
 
+      if (!mounted) return;
       if (newPin != null && newPin.isNotEmpty) {
         setState(() {
           _staticPinCode = newPin;
@@ -91,6 +93,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                                   color: Colors.grey,
                                 ),
                               ),
+
                               const SizedBox(height: 20),
                               TextField(
                                 controller: _pinController,

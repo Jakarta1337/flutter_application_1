@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:login_signup/screens/profile/settings_screen.dart';
 
 class NewPinCodeVerificationScreen extends StatefulWidget {
-  const NewPinCodeVerificationScreen({Key? key}) : super(key: key);
+  const NewPinCodeVerificationScreen({super.key});
 
   @override
   State<NewPinCodeVerificationScreen> createState() =>
@@ -51,6 +51,7 @@ class _NewPinCodeVerificationScreenState
 
     await Future.delayed(const Duration(seconds: 1));
 
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SettingsScreen()),

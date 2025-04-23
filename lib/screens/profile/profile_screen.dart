@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:login_signup/screens/auth/signin_screen.dart';
-import 'package:login_signup/screens/profile/editProfile_screen.dart';
+import 'package:login_signup/screens/profile/edit_profile_screen.dart';
 import 'package:login_signup/screens/profile/settings_screen.dart';
 
 class ProfilePage extends StatefulWidget {

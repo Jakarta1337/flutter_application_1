@@ -203,9 +203,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           onPressed: () {
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Signing in...')),
-                              );
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(content: Text('Signing in...')),
+                              // );
 
                               // Simulate navigation to a home screen
                               Future.delayed(const Duration(seconds: 1), () {

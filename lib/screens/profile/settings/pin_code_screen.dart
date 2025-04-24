@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:login_signup/screens/profile/new_pin_code_screen.dart';
+import 'package:login_signup/screens/profile/settings/new_pin_code_screen.dart';
+import 'package:login_signup/widgets/settings/pin_code_field.dart';
+import 'package:login_signup/widgets/create_button.dart';
 
 class PinCodeVerificationScreen extends StatefulWidget {
   const PinCodeVerificationScreen({super.key});
@@ -20,7 +21,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
   void _validatePin() async {
     if (_pinController.text.isEmpty) {
       setState(() {
-        _errorText = 'PIN code cannot be empty';
+        _updateErrorText('PIN code cannot be empty');
       });
       return;
     }
@@ -41,9 +42,10 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
       );
 
       if (!mounted) return;
-      if (newPin != null && newPin.isNotEmpty) {
+      // if (newPin != null && newPin.isNotEmpty) {
+      if (newPin?.isNotEmpty ?? false) {
         setState(() {
-          _staticPinCode = newPin;
+          _staticPinCode = newPin!;
           _pinController.clear();
           _errorText = null;
         });
@@ -57,8 +59,14 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
         _isLoading = false;
       });
     } else {
+      _updateErrorText('Incorrect PIN code');
+    }
+  }
+
+  void _updateErrorText(String message) {
+    if (mounted) {
       setState(() {
-        _errorText = 'Incorrect PIN code';
+        _errorText = message;
       });
     }
   }
@@ -95,57 +103,25 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                               ),
 
                               const SizedBox(height: 20),
-                              TextField(
+                              PinCodeField(
                                 controller: _pinController,
-                                obscureText: _isObscure,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(6),
-                                ],
-                                decoration: InputDecoration(
-                                  hintText: 'PIN code',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  errorText: _errorText,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isObscure
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscure = !_isObscure;
-                                      });
-                                    },
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                                isObscure: _isObscure,
+                                errorText: _errorText,
                                 onChanged: (value) {
                                   if (_errorText != null) {
-                                    setState(() {
-                                      _errorText = null;
-                                    });
+                                    setState(() => _errorText = null);
                                   }
+                                },
+                                onVisibilityToggle: () {
+                                  setState(() => _isObscure = !_isObscure);
                                 },
                               ),
                             ],
                           ),
                         ),
-                        ElevatedButton(
+                        ContinueButton(
                           onPressed: _validatePin,
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: const Text(
-                            'Continue',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          title: 'Continue',
                         ),
                       ],
                     ),

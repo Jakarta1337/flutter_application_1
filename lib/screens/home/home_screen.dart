@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:login_signup/screens/profile/profile_screen.dart';
 import 'package:login_signup/screens/search/search_screen.dart';
-import 'package:login_signup/screens/profile/settings_screen.dart';
+import 'package:login_signup/screens/profile/settings/settings_screen.dart';
 import 'package:login_signup/screens/auth/signin_screen.dart';
 import 'package:login_signup/screens/test_screen.dart';
 

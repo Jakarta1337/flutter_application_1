@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:login_signup/widgets/read_only_field.dart';
 import 'package:login_signup/widgets/editable_field.dart';
 import 'package:login_signup/widgets/image_picker_widget.dart';
+import 'package:login_signup/widgets/validators.dart';
 
-// Updated EditProfileScreen with comprehensive field validation
 class EditProfileScreen extends StatefulWidget {
   final File? initialImage;
   final Map<String, dynamic> userData;
@@ -24,28 +24,20 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
-
-  // Form key for validation
   final _formKey = GlobalKey<FormState>();
 
-  // Text editing controllers to manage field values
+  late Map<String, dynamic> _updatedUserData;
   late TextEditingController _lastNameController;
   late TextEditingController _firstNameController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
 
-  // Map to hold updated user data
-  late Map<String, dynamic> _updatedUserData;
-
   @override
   void initState() {
     super.initState();
     _imageFile = widget.initialImage;
-
-    // Initialize the updated user data with the original data
     _updatedUserData = Map.from(widget.userData);
 
-    // Initialize controllers with values from user data
     _lastNameController = TextEditingController(
       text: widget.userData['lastName'] ?? '',
     );
@@ -62,53 +54,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    // Dispose controllers when the widget is disposed
     _lastNameController.dispose();
     _firstNameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     super.dispose();
-  }
-
-  // Function to validate a name (first or last)
-  bool isValidName(String name) {
-    if (name.isEmpty) {
-      return false;
-    }
-
-    if (name.length < 2 || name.length > 25) {
-      return false;
-    }
-
-    // Allow letters, spaces, hyphens, and apostrophes
-    final RegExp nameRegex = RegExp(r"^[a-zA-Z\s\-']+$");
-    return nameRegex.hasMatch(name);
-  }
-
-  // Function to validate a phone number
-  bool isValidPhone(String phone) {
-    if (phone.isEmpty) {
-      return false;
-    }
-
-    // Validate format: optional single '+' at start, followed by 8-15 digits
-    final RegExp phoneRegex = RegExp(r'^\+?[0-9]{8,15}$');
-
-    return phoneRegex.hasMatch(phone);
-  }
-
-  // Function to validate an email address
-  bool isValidEmail(String email) {
-    if (email.isEmpty) {
-      return false;
-    }
-
-    // Simple email regex that validates common email formats
-    final RegExp emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-
-    return emailRegex.hasMatch(email);
   }
 
   @override
@@ -159,15 +109,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               shape: BoxShape.circle,
                               color: Colors.grey[200],
                             ),
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_a_photo,
-                                  size: 30,
-                                  color: Colors.blueAccent,
-                                ),
-                              ],
+                            child: const Icon(
+                              Icons.add_a_photo,
+                              size: 30,
+                              color: Colors.blueAccent,
                             ),
                           ),
                         )
@@ -207,21 +152,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ],
                         ),
               ),
-              const SizedBox(height: 25),
 
-              // Editable Fields with comprehensive validation
+              const SizedBox(height: 25),
               buildEditableField(
                 'Last Name',
                 _lastNameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Last name is required';
-                  }
-                  if (!isValidName(value)) {
-                    return 'Please enter a valid last name';
-                  }
-                  return null;
-                },
+                validator: (value) => validateName(value!, 'Last name'),
                 onChanged: (value) {
                   _updatedUserData['lastName'] = value;
                 },
@@ -235,15 +171,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               buildEditableField(
                 'First Name',
                 _firstNameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'First name is required';
-                  }
-                  if (!isValidName(value)) {
-                    return 'Please enter a valid first name';
-                  }
-                  return null;
-                },
+                validator: (value) => validateName(value!, 'First name'),
                 onChanged: (value) {
                   _updatedUserData['firstName'] = value;
                 },
@@ -262,57 +190,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               buildEditableField(
                 'Phone',
                 _phoneController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Phone number is required';
-                  }
-                  if (!isValidPhone(value)) {
-                    return 'Please enter a valid phone number';
-                  }
-                  return null;
-                },
+                validator: (value) => validatePhone(value!),
                 onChanged: (value) {
                   _updatedUserData['phone'] = value;
                 },
                 keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(16),
-                  TextInputFormatter.withFunction((oldValue, newValue) {
-                    final text = newValue.text;
-
-                    if (text.isEmpty) {
-                      return newValue;
-                    }
-
-                    if (text.contains('+') && text.indexOf('+') > 0) {
-                      return oldValue;
-                    }
-
-                    if (text.split('+').length > 2) {
-                      return oldValue;
-                    }
-
-                    if (!RegExp(r'^\+?[0-9]*$').hasMatch(text)) {
-                      return oldValue;
-                    }
-
-                    return newValue;
-                  }),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(16)],
               ),
 
               buildEditableField(
                 'Email',
                 _emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Email is required';
-                  }
-                  if (!isValidEmail(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
+                validator: (value) => validateEmail(value!),
                 onChanged: (value) {
                   _updatedUserData['email'] = value;
                 },
@@ -321,21 +210,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
 
               buildReadOnlyField('CIN', widget.userData['cin'] ?? 'AB123456'),
-              const SizedBox(height: 30),
 
-              // Save Button with validation
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Validate the form first
                     if (_formKey.currentState!.validate()) {
-                      // Create result map with both image and updated data
                       final result = {
                         'image': _imageFile,
                         'userData': _updatedUserData,
                       };
-                      // Return both the selected image and updated user data
                       Navigator.pop(context, result);
                     }
                   },

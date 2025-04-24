@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_signup/screens/welcome_screen.dart';
 import 'package:login_signup/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:login_signup/screens/profile/settings_screen.dart';
+import 'package:login_signup/screens/profile/settings/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

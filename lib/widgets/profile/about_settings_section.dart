@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/profile/settings_screen.dart';
+import 'package:login_signup/screens/profile/settings/settings_screen.dart';
 
 class AboutSettingsSection extends StatelessWidget {
   final VoidCallback onLogout;

@@ -14,15 +14,21 @@ class _TestPageState extends State<TestPage> {
     return ChangeNotifierProvider(
       create: (context) => Model(),
       child: Scaffold(
-        body: Consumer<Model>(
-          builder: (context, model, child) {
+        body: Selector<Model, int>(
+          selector: (context, model) => model.getI,
+          builder: (context, i, child) {
+            print(i);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("c=${model.i}"),
+                  Text("X=$i"),
                   ElevatedButton(
-                    onPressed: model.changeCounterValue,
+                    onPressed:
+                        Provider.of<Model>(
+                          context,
+                          listen: false,
+                        ).changeCounterValue,
                     child: const Text('Press Me'),
                   ),
                 ],
@@ -36,9 +42,10 @@ class _TestPageState extends State<TestPage> {
 }
 
 class Model extends ChangeNotifier {
-  int c = 10, i = 0;
+  int i = 0;
+  get getI => i;
+
   void changeCounterValue() {
-    // i == 0 ? (c = 100, i = 1) : (c = 200, i = 0);
     i++;
     notifyListeners();
   }

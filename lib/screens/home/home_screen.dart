@@ -6,6 +6,8 @@ import 'package:login_signup/screens/profile/settings_screen.dart';
 import 'package:login_signup/screens/auth/signin_screen.dart';
 import 'package:login_signup/screens/test_screen.dart';
 
+import 'package:login_signup/widgets/dialogs/logout_dialog.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -70,33 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Log Out'),
-            content: const Text('Are you sure you want to log out?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Log Out'),
-              ),
-            ],
-          ),
-    );
+    showDialog(context: context, builder: (_) => const LogoutDialog());
   }
 
   @override
@@ -225,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Test'),
+          // BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Test'),
         ],
       ),
 

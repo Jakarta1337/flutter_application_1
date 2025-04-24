@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+
+import 'package:login_signup/widgets/read_only_field.dart';
+import 'package:login_signup/widgets/editable_field.dart';
+import 'package:login_signup/widgets/image_picker_widget.dart';
 
 // Updated EditProfileScreen with comprehensive field validation
 class EditProfileScreen extends StatefulWidget {
@@ -21,7 +24,6 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
-  final ImagePicker _picker = ImagePicker();
 
   // Form key for validation
   final _formKey = GlobalKey<FormState>();
@@ -109,51 +111,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return emailRegex.hasMatch(email);
   }
 
-  // Function to handle image selection
-  Future<void> _selectImage() async {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Photo Gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _getImage(ImageSource.gallery);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: const Text('Camera'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _getImage(ImageSource.camera);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // Function to get image from source
-  Future<void> _getImage(ImageSource source) async {
-    final XFile? pickedFile = await _picker.pickImage(
-      source: source,
-      imageQuality: 80,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,11 +129,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: _selectImage,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: ImagePickerWidget(
+                          onImageSelected: (File image) {
+                            setState(() {
+                              _imageFile = image;
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
                 child:
                     _imageFile == null
-                        ? // Show dotted border with camera icon when no image is selected
-                        DottedBorder(
+                        ? DottedBorder(
                           borderType: BorderType.Circle,
                           dashPattern: [6, 3],
                           color: Colors.grey,
@@ -200,8 +171,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                         )
-                        : // Show selected image
-                        Stack(
+                        : Stack(
                           children: [
                             ClipOval(
                               child: Image.file(
@@ -240,7 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 25),
 
               // Editable Fields with comprehensive validation
-              _buildEditableFieldV2(
+              buildEditableField(
                 'Last Name',
                 _lastNameController,
                 validator: (value) {
@@ -262,7 +232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
 
-              _buildEditableFieldV2(
+              buildEditableField(
                 'First Name',
                 _firstNameController,
                 validator: (value) {
@@ -284,12 +254,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
 
-              _buildReadOnlyField(
+              buildReadOnlyField(
                 'Job',
                 widget.userData['job'] ?? 'Front-end & Flutter Developer',
               ),
 
-              _buildEditableFieldV2(
+              buildEditableField(
                 'Phone',
                 _phoneController,
                 validator: (value) {
@@ -331,7 +301,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
 
-              _buildEditableFieldV2(
+              buildEditableField(
                 'Email',
                 _emailController,
                 validator: (value) {
@@ -350,7 +320,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 inputFormatters: [LengthLimitingTextInputFormatter(25)],
               ),
 
-              _buildReadOnlyField('CIN', widget.userData['cin'] ?? 'AB123456'),
+              buildReadOnlyField('CIN', widget.userData['cin'] ?? 'AB123456'),
               const SizedBox(height: 30),
 
               // Save Button with validation
@@ -373,50 +343,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEditableFieldV2(
-    String label,
-    TextEditingController controller, {
-    required Function(String) onChanged,
-    required String? Function(String?) validator,
-    List<TextInputFormatter>? inputFormatters,
-    TextInputType? keyboardType,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
-          ),
-        ),
-        validator: validator,
-        onChanged: onChanged,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-      ),
-    );
-  }
-
-  Widget _buildReadOnlyField(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        initialValue: value,
-        enabled: false,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[300]!),
           ),
         ),
       ),

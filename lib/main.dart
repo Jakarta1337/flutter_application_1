@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/welcome_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_signup/screens/repo.dart';
 import 'package:login_signup/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:login_signup/screens/bloc/auth_bloc.dart';
+import 'package:login_signup/screens/search/bloc/counter_bloc.dart';
+import 'package:login_signup/screens/welcome_screen.dart';
 import 'package:login_signup/screens/profile/settings/settings_screen.dart';
 
 void main() async {
@@ -20,6 +25,7 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key, required this.themePref});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MyAppState createState() => _MyAppState();
 }
 
@@ -54,16 +60,61 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     theme: lightMode,
+  //     darkTheme: darkMode,
+  //     themeMode: _themeMode,
+  //     home: WelcomeScreen(onThemeChanged: _updateTheme),
+  //     routes: {
+  //       '/settings': (context) => SettingsScreen(onThemeChanged: _updateTheme),
+  //     },
+  //   );
+  // }
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightMode, // light mode from your theme.dart
-      darkTheme: darkMode, // dark mode from your theme.dart
-      themeMode: _themeMode, // Apply theme mode based on preference
-      home: WelcomeScreen(onThemeChanged: _updateTheme),
-      routes: {
-        '/settings': (context) => SettingsScreen(onThemeChanged: _updateTheme),
-      },
+    // counter test: search_screen.dart
+    // return BlocProvider(
+    //   create: (context) => CounterBloc(),
+    //   child: MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     theme: lightMode,
+    //     darkTheme: darkMode,
+    //     themeMode: _themeMode,
+    //     home: WelcomeScreen(onThemeChanged: _updateTheme),
+    //     routes: {
+    //       '/settings':
+    //           (context) => SettingsScreen(onThemeChanged: _updateTheme),
+    //     },
+    //   ),
+    // );
+
+    // login test: test_screen.dart
+    return MultiRepositoryProvider(
+      providers: [RepositoryProvider(create: (_) => AuthRepository())],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<CounterBloc>(
+            create: (BuildContext context) => CounterBloc(),
+          ),
+          BlocProvider<AuthBloc>(
+            create:
+                (context) =>
+                    AuthBloc(RepositoryProvider.of<AuthRepository>(context)),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: lightMode,
+          darkTheme: darkMode,
+          themeMode: _themeMode,
+          home: WelcomeScreen(onThemeChanged: _updateTheme),
+          routes: {
+            '/settings':
+                (context) => SettingsScreen(onThemeChanged: _updateTheme),
+          },
+        ),
+      ),
     );
   }
 }

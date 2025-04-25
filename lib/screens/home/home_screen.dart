@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:login_signup/screens/profile/profile_screen.dart';
 import 'package:login_signup/screens/search/search_screen.dart';
 import 'package:login_signup/screens/profile/settings/settings_screen.dart';
-import 'package:login_signup/screens/auth/signin_screen.dart';
 import 'package:login_signup/screens/test_screen.dart';
 
 import 'package:login_signup/widgets/dialogs/logout_dialog.dart';
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomePage(),
     const SearchPage(),
     const ProfilePage(),
-    const TestPage(),
+    TestPage(),
   ];
 
   @override
@@ -201,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          // BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Test'),
+          BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Test'),
         ],
       ),
 

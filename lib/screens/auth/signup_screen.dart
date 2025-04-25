@@ -255,10 +255,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Logo(Logos.facebook_f),
-                          Logo(Logos.twitter),
-                          Logo(Logos.google),
-                          Logo(Logos.apple),
+                          Brand(Brands.facebook_f),
+                          Brand(Brands.twitter),
+                          Brand(Brands.google),
+                          Brand(Brands.apple_logo),
                         ],
                       ),
 

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:login_signup/feautures/presentation/screens/repo.dart';
 import 'package:login_signup/config/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:login_signup/feautures/presentation/screens/bloc/auth_bloc.dart';
-import 'package:login_signup/feautures/presentation/screens/search/bloc/counter_bloc.dart';
-import 'package:login_signup/feautures/presentation/screens/welcome_screen.dart';
-import 'package:login_signup/feautures/presentation/screens/profile/settings/settings_screen.dart';
+import 'package:login_signup/features/presentation/screens/welcome_screen.dart';
+import 'package:login_signup/features/presentation/screens/profile/settings/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +34,6 @@ class _MyAppState extends State<MyApp> {
     _themeMode = _getThemeMode(widget.themePref);
   }
 
-  // Convert string theme preference to ThemeMode
   ThemeMode _getThemeMode(String pref) {
     switch (pref) {
       case 'light':
@@ -50,7 +45,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Update theme preference and notify root
   void _updateTheme(String newPref) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', newPref);
@@ -60,61 +54,61 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: lightMode,
+      darkTheme: darkMode,
+      themeMode: _themeMode,
+      home: WelcomeScreen(onThemeChanged: _updateTheme),
+      routes: {
+        '/settings': (context) => SettingsScreen(onThemeChanged: _updateTheme),
+      },
+    );
+  }
   // Widget build(BuildContext context) {
-  //   return MaterialApp(
+  // counter test: search_screen.dart
+  // return BlocProvider(
+  //   create: (context) => CounterBloc(),
+  //   child: MaterialApp(
   //     debugShowCheckedModeBanner: false,
   //     theme: lightMode,
   //     darkTheme: darkMode,
   //     themeMode: _themeMode,
   //     home: WelcomeScreen(onThemeChanged: _updateTheme),
   //     routes: {
-  //       '/settings': (context) => SettingsScreen(onThemeChanged: _updateTheme),
+  //       '/settings':
+  //           (context) => SettingsScreen(onThemeChanged: _updateTheme),
   //     },
-  //   );
-  // }
-  Widget build(BuildContext context) {
-    // counter test: search_screen.dart
-    // return BlocProvider(
-    //   create: (context) => CounterBloc(),
-    //   child: MaterialApp(
-    //     debugShowCheckedModeBanner: false,
-    //     theme: lightMode,
-    //     darkTheme: darkMode,
-    //     themeMode: _themeMode,
-    //     home: WelcomeScreen(onThemeChanged: _updateTheme),
-    //     routes: {
-    //       '/settings':
-    //           (context) => SettingsScreen(onThemeChanged: _updateTheme),
-    //     },
-    //   ),
-    // );
+  //   ),
+  // );
 
-    // login test: test_screen.dart
-    return MultiRepositoryProvider(
-      providers: [RepositoryProvider(create: (_) => AuthRepository())],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<CounterBloc>(
-            create: (BuildContext context) => CounterBloc(),
-          ),
-          BlocProvider<AuthBloc>(
-            create:
-                (context) =>
-                    AuthBloc(RepositoryProvider.of<AuthRepository>(context)),
-          ),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: lightMode,
-          darkTheme: darkMode,
-          themeMode: _themeMode,
-          home: WelcomeScreen(onThemeChanged: _updateTheme),
-          routes: {
-            '/settings':
-                (context) => SettingsScreen(onThemeChanged: _updateTheme),
-          },
-        ),
-      ),
-    );
-  }
+  // login test: test_screen.dart
+  // return MultiRepositoryProvider(
+  //   providers: [RepositoryProvider(create: (_) => AuthRepository())],
+  //   child: MultiBlocProvider(
+  //     providers: [
+  //       BlocProvider<CounterBloc>(
+  //         create: (BuildContext context) => CounterBloc(),
+  //       ),
+  //       BlocProvider<AuthBloc>(
+  //         create:
+  //             (context) =>
+  //                 AuthBloc(RepositoryProvider.of<AuthRepository>(context)),
+  //       ),
+  //     ],
+  //     child: MaterialApp(
+  //       debugShowCheckedModeBanner: false,
+  //       theme: lightMode,
+  //       darkTheme: darkMode,
+  //       themeMode: _themeMode,
+  //       home: WelcomeScreen(onThemeChanged: _updateTheme),
+  //       routes: {
+  //         '/settings':
+  //             (context) => SettingsScreen(onThemeChanged: _updateTheme),
+  //       },
+  //     ),
+  //   ),
+  // );
+  // }
 }

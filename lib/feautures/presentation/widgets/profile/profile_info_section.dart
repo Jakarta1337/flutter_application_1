@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/widgets/profile/info_row.dart';
+import 'package:login_signup/feautures/presentation/widgets/profile/info_row.dart';
 
 class ProfileInfoSection extends StatelessWidget {
   final Map<String, dynamic> userData;

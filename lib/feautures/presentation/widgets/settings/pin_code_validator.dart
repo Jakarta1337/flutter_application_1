@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/profile/settings/new_pin_code_screen.dart';
+import 'package:login_signup/feautures/presentation/screens/profile/settings/new_pin_code_screen.dart';
 
 class PinCodeValidator {
   final TextEditingController pinController;

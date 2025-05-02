@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:login_signup/screens/repo.dart';
-import 'package:login_signup/theme/theme.dart';
+import 'package:login_signup/feautures/presentation/screens/repo.dart';
+import 'package:login_signup/config/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:login_signup/screens/bloc/auth_bloc.dart';
-import 'package:login_signup/screens/search/bloc/counter_bloc.dart';
-import 'package:login_signup/screens/welcome_screen.dart';
-import 'package:login_signup/screens/profile/settings/settings_screen.dart';
+import 'package:login_signup/feautures/presentation/screens/bloc/auth_bloc.dart';
+import 'package:login_signup/feautures/presentation/screens/search/bloc/counter_bloc.dart';
+import 'package:login_signup/feautures/presentation/screens/welcome_screen.dart';
+import 'package:login_signup/feautures/presentation/screens/profile/settings/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

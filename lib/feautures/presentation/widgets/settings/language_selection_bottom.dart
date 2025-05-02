@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:login_signup/widgets/settings/setting_title.dart';
-import 'package:login_signup/widgets/custom_radio_list_title.dart';
+import 'package:login_signup/feautures/presentation/widgets/settings/setting_title.dart';
+import 'package:login_signup/feautures/presentation/widgets/custom_radio_list_title.dart';
 
 class LanguageSettingsWidget extends StatefulWidget {
   const LanguageSettingsWidget({super.key});

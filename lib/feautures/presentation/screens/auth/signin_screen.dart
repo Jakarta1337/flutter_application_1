@@ -5,7 +5,7 @@ import 'package:login_signup/feautures/presentation/screens/home/home_screen.dar
 import 'package:login_signup/feautures/presentation/screens/auth/forgot_password_screen.dart';
 import 'package:login_signup/feautures/presentation/widgets/custom_scaffold.dart';
 
-import '../../config/theme/theme.dart';
+import '../../../../config/theme/theme.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:login_signup/screens/profile/settings/settings_screen.dart';
+import 'package:login_signup/feautures/presentation/screens/profile/settings/settings_screen.dart';
 
 class NewPinCodeVerificationScreen extends StatefulWidget {
   const NewPinCodeVerificationScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/screens/auth/signin_screen.dart';
+import 'package:login_signup/feautures/presentation/screens/auth/signin_screen.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({super.key});

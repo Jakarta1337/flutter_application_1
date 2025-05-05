@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup/features/presentation/screens/auth/signin_screen.dart';
-import 'package:login_signup/features/presentation/screens/auth/signup_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:login_signup/config/theme/theme.dart';
 import 'package:login_signup/features/presentation/widgets/custom_scaffold.dart';
 import 'package:login_signup/features/presentation/widgets/welcome_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final Function(String) onThemeChanged;
-
-  const WelcomeScreen({super.key, required this.onThemeChanged});
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +48,10 @@ class WelcomeScreen extends StatelessWidget {
               alignment: Alignment.bottomRight,
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: WelcomeButton(
                       buttonText: 'Sign in',
-                      onTap: SignInScreen(),
+                      onTap: () => context.push('/signin'),
                       color: Colors.transparent,
                       textColor: Colors.white,
                     ),
@@ -62,7 +59,7 @@ class WelcomeScreen extends StatelessWidget {
                   Expanded(
                     child: WelcomeButton(
                       buttonText: 'Sign up',
-                      onTap: SignUpScreen(),
+                      onTap: () => context.push('/signup'),
                       color: Colors.white,
                       textColor: lightColorScheme.primary,
                     ),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_signup/features/presentation/screens/auth/signup_screen.dart';
-import 'package:login_signup/features/presentation/screens/home/home_screen.dart';
-import 'package:login_signup/features/presentation/screens/auth/forgot_password_screen.dart';
-import 'package:login_signup/features/presentation/widgets/custom_scaffold.dart';
+import 'package:login_signup/config/theme/theme.dart';
 
-import '../../../../config/theme/theme.dart';
+import 'package:login_signup/features/presentation/widgets/custom_scaffold.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -87,15 +85,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           hintText: 'Enter Email',
                           hintStyle: const TextStyle(color: Colors.black26),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -178,12 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) => const ForgotPasswordScreen(),
-                                ),
-                              );
+                              context.push('/forgot-password');
                             },
                             child: Text(
                               'Forget password?',
@@ -200,23 +189,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(content: Text('Signing in...')),
-                              // );
+                              await Future.delayed(const Duration(seconds: 1));
 
-                              // Simulate navigation to a home screen
-                              Future.delayed(const Duration(seconds: 1), () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              });
+                              if (!mounted) return;
+                              context.go('/home');
                             } else if (!rememberPassword) {
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -281,12 +262,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) => const SignUpScreen(),
-                                ),
-                              );
+                              context.push('/signup');
                             },
                             child: Text(
                               'Sign up',

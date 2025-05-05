@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:login_signup/features/presentation/screens/profile/profile_screen.dart';
-import 'package:login_signup/features/presentation/screens/to-do/to-do_screen.dart';
-import 'package:login_signup/features/presentation/screens/profile/settings/settings_screen.dart';
 
+import 'package:login_signup/features/presentation/screens/profile/profile_screen.dart';
+import 'package:login_signup/features/presentation/screens/todo/todo_screen.dart';
+import 'package:login_signup/features/presentation/screens/profile/settings/settings_screen.dart';
 import 'package:login_signup/features/presentation/widgets/dialogs/logout_dialog.dart';
 
 void main() {
@@ -78,12 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('My Flutter App'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Notification action
-            },
-          ),
+          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
         ],
       ),
 
@@ -107,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  // SizedBox(height: 5),
                   Text(
                     'Zakaria',
                     style: TextStyle(
@@ -116,7 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  // SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -240,9 +233,7 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {
-                        // Button action
-                      },
+                      onPressed: () {},
                       child: const Text('View Details'),
                     ),
                   ],
@@ -260,16 +251,14 @@ class HomePage extends StatelessWidget {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 5,
+              itemCount: 2,
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: const Icon(Icons.star),
                   title: Text('Item ${index + 1}'),
                   subtitle: const Text('Description of the item'),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Item tap action
-                  },
+                  onTap: () {},
                 );
               },
             ),

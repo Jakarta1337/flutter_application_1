@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -16,7 +17,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
 
-      // Simulate sending reset email (replace with actual logic like Firebase)
       Future.delayed(const Duration(seconds: 2), () {
         setState(() => _loading = false);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -25,7 +25,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             duration: Duration(seconds: 2),
           ),
         );
-        Navigator.pop(context); // Go back to login or previous screen
+        context.pop();
       });
     }
   }

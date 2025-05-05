@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:login_signup/config/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:login_signup/features/presentation/screens/welcome_screen.dart';
-import 'package:login_signup/features/presentation/screens/profile/settings/settings_screen.dart';
+import 'features/presentation/screens/auth/forgot_password_screen.dart';
+import 'features/presentation/screens/auth/signin_screen.dart';
+import 'features/presentation/screens/auth/signup_screen.dart';
+import 'features/presentation/screens/profile/profile_screen.dart';
+import 'features/presentation/screens/profile/settings/settings_screen.dart';
+import 'features/presentation/screens/todo/todo_screen.dart';
+import 'features/presentation/screens/welcome_screen.dart';
+import 'features/presentation/screens/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,27 +52,49 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _updateTheme(String newPref) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('theme', newPref);
-    setState(() {
-      _themeMode = _getThemeMode(newPref);
-    });
-  }
+  final GoRouter _router = GoRouter(
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const WelcomeScreen()),
+      GoRoute(
+        path: '/signin',
+        builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
+      GoRoute(path: '/todo', builder: (context, state) => const TodoPage()),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfilePage(),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'settings',
+            builder: (context, state) {
+              return SettingsScreen();
+            },
+          ),
+        ],
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: lightMode,
       darkTheme: darkMode,
       themeMode: _themeMode,
-      home: WelcomeScreen(onThemeChanged: _updateTheme),
-      routes: {
-        '/settings': (context) => SettingsScreen(onThemeChanged: _updateTheme),
-      },
+      routerConfig: _router,
     );
   }
+
   // Widget build(BuildContext context) {
   // counter test: search_screen.dart
   // return BlocProvider(
@@ -75,40 +104,11 @@ class _MyAppState extends State<MyApp> {
   //     theme: lightMode,
   //     darkTheme: darkMode,
   //     themeMode: _themeMode,
-  //     home: WelcomeScreen(onThemeChanged: _updateTheme),
+  //     home: WelcomeScreen(),
   //     routes: {
   //       '/settings':
-  //           (context) => SettingsScreen(onThemeChanged: _updateTheme),
+  //           (context) => SettingsScreen(),
   //     },
   //   ),
   // );
-
-  // login test: test_screen.dart
-  // return MultiRepositoryProvider(
-  //   providers: [RepositoryProvider(create: (_) => AuthRepository())],
-  //   child: MultiBlocProvider(
-  //     providers: [
-  //       BlocProvider<CounterBloc>(
-  //         create: (BuildContext context) => CounterBloc(),
-  //       ),
-  //       BlocProvider<AuthBloc>(
-  //         create:
-  //             (context) =>
-  //                 AuthBloc(RepositoryProvider.of<AuthRepository>(context)),
-  //       ),
-  //     ],
-  //     child: MaterialApp(
-  //       debugShowCheckedModeBanner: false,
-  //       theme: lightMode,
-  //       darkTheme: darkMode,
-  //       themeMode: _themeMode,
-  //       home: WelcomeScreen(onThemeChanged: _updateTheme),
-  //       routes: {
-  //         '/settings':
-  //             (context) => SettingsScreen(onThemeChanged: _updateTheme),
-  //       },
-  //     ),
-  //   ),
-  // );
-  // }
 }

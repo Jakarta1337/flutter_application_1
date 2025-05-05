@@ -8,9 +8,7 @@ import 'package:login_signup/features/presentation/widgets/settings/setting_titl
 import 'package:login_signup/features/presentation/widgets/settings/section_header.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final Function(String)? onThemeChanged;
-
-  const SettingsScreen({super.key, this.onThemeChanged});
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();

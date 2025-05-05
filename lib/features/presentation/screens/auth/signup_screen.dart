@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:login_signup/features/presentation/screens/auth/signin_screen.dart';
 import 'package:login_signup/config/theme/theme.dart';
 import 'package:login_signup/features/presentation/widgets/custom_scaffold.dart';
 
@@ -34,13 +34,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               child: SingleChildScrollView(
-                // get started form
                 child: Form(
                   key: _formSignupKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // get started text
                       Text(
                         'Get Started',
                         style: TextStyle(
@@ -170,8 +168,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 25.0),
+                      const SizedBox(height: 20.0),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Checkbox(
                             value: agreePersonalData,
@@ -181,16 +180,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               });
                             },
                             activeColor: lightColorScheme.primary,
+                            visualDensity: VisualDensity.compact,
                           ),
-                          const Text(
-                            'I agree to the processing of ',
-                            style: TextStyle(color: Colors.black45),
-                          ),
-                          Text(
-                            'Personal data',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: lightColorScheme.primary,
+                          Flexible(
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'I agree to the processing of ',
+                                style: const TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Personal data',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: lightColorScheme.primary,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -272,12 +282,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) => const SignInScreen(),
-                                ),
-                              );
+                              context.push('/signin');
                             },
                             child: Text(
                               'Sign in',

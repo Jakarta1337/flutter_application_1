@@ -15,7 +15,6 @@ import 'features/presentation/screens/home/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Fetch saved theme preference
   final prefs = await SharedPreferences.getInstance();
   final themePref = prefs.getString('theme') ?? 'system';
 

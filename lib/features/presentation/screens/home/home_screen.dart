@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:login_signup/features/presentation/screens/home/qr_generator.dart';
 
 import 'package:login_signup/features/presentation/screens/profile/profile_screen.dart';
 import 'package:login_signup/features/presentation/screens/todo/todo_screen.dart';
 import 'package:login_signup/features/presentation/screens/profile/settings/settings_screen.dart';
 import 'package:login_signup/features/presentation/widgets/dialogs/logout_dialog.dart';
+
+import 'location_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +40,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final PageController _pageController = PageController();
+
+  bool isInLocation = false;
+  bool loading = true;
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -195,6 +201,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLocationAccess(context);
+    });
+  }
 }
 
 class HomePage extends StatelessWidget {
@@ -214,54 +229,77 @@ class HomePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Today\'s Summary',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Here you can display some summary information.',
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('View Details'),
-                    ),
-                  ],
-                ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () => checkLocationAccess(context),
+                child: const Text("Recoverer"),
               ),
             ),
 
-            const SizedBox(height: 20),
-            const Text(
-              'Recent Items',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            // scan qr code
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const QRGeneratorPage(data: '0'),
+                    ),
+                  );
+                },
+                child: const Text('Scan QR Code'),
+              ),
             ),
 
-            const SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.star),
-                  title: Text('Item ${index + 1}'),
-                  subtitle: const Text('Description of the item'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {},
-                );
-              },
-            ),
+            // Card(
+            //   elevation: 4,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(16.0),
+            //     child: Column(
+            //       children: [
+            //         const Text(
+            //           'Today\'s Summary',
+            //           style: TextStyle(
+            //             fontSize: 18,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //         const SizedBox(height: 8),
+            //         const Text(
+            //           'Here you can display some summary information.',
+            //         ),
+            //         const SizedBox(height: 16),
+            //         ElevatedButton(
+            //           onPressed: () {},
+            //           child: const Text('View Details'),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+
+            // const SizedBox(height: 20),
+            // const Text(
+            //   'Recent Items',
+            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            // ),
+
+            // const SizedBox(height: 10),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemCount: 2,
+            //   itemBuilder: (context, index) {
+            //     return ListTile(
+            //       leading: const Icon(Icons.star),
+            //       title: Text('Item ${index + 1}'),
+            //       subtitle: const Text('Description of the item'),
+            //       trailing: const Icon(Icons.chevron_right),
+            //       onTap: () {},
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
